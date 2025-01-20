@@ -1,0 +1,30 @@
+services:
+
+  city-guide:
+    image: city-guide
+    build: .
+    container_name: city-guide
+    ports:
+      - "8080:8080"
+    depends_on:
+      - cg_db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://cg_db:5432/cg_db
+      - SPRING_DATASOURCE_USERNAME=ultro
+      - SPRING_DATASOURCE_PASSWORD=163163
+
+  cg_db:
+    image: postgres:16.1
+    container_name: cg_db
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=163163
+      - POSTGRES_USER=ultro
+      - POSTGRES_DB=cg_db
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
+
